@@ -135,7 +135,7 @@ export function AdminPanel({ users: initialUsers, currentUser }: AdminPanelProps
             <Select
               label="Role"
               value={formData.role}
-              onChange={(value) => setFormData({ ...formData, role: value })}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               options={[
                 { value: 'Viewer', label: 'Viewer' },
                 { value: 'Editor', label: 'Editor' }
