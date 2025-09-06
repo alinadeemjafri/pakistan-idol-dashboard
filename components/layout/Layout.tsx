@@ -4,10 +4,10 @@ import { AuthUser } from '@/lib/auth';
 
 interface LayoutProps {
   children: React.ReactNode;
-  user: AuthUser | null;
+  user?: AuthUser | null;
 }
 
-export function Layout({ children, user }: LayoutProps) {
+export function Layout({ children, user = null }: LayoutProps) {
   return (
     <div className="min-h-screen bg-slate-50">
       <Header user={user} />

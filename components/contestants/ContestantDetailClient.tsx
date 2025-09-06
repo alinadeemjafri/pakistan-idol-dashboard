@@ -212,7 +212,7 @@ export function ContestantDetailClient({ contestant, user }: ContestantDetailCli
                   <Star className="w-4 h-4 text-warning" />
                   <span className="text-sm text-slate-600">Average Score</span>
                 </div>
-                <span className="font-semibold">{averageScore.toFixed(1)}</span>
+                <span className="font-semibold">{averageScore?.toFixed(1) || '0.0'}</span>
               </div>
               
               <div className="flex items-center justify-between">
@@ -229,7 +229,7 @@ export function ContestantDetailClient({ contestant, user }: ContestantDetailCli
                   <span className="text-sm text-slate-600">Golden Mics</span>
                 </div>
                 <InlineEdit
-                  value={contestant.golden_mics_received}
+                  value={contestant.golden_mics_received || 0}
                   onSave={(value) => handleUpdateContestant('golden_mics_received', value)}
                   type="number"
                   canEdit={isEditor}

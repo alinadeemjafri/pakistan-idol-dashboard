@@ -48,7 +48,7 @@ export function ContestantCard({ contestant }: ContestantCardProps) {
                 <div className="flex items-center space-x-6 mt-3">
                   <div className="flex items-center space-x-2 bg-warning/10 rounded-lg px-3 py-1">
                     <Star className="w-4 h-4 text-warning" />
-                    <span className="font-semibold text-slate-700">{contestant.average_score.toFixed(1)}</span>
+                    <span className="font-semibold text-slate-700">{contestant.average_score?.toFixed(1) || '0.0'}</span>
                     <span className="text-slate-500 text-xs">avg</span>
                   </div>
                   

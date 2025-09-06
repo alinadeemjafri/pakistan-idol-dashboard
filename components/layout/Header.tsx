@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
-import { Calendar, Home, List, Play, Tv, Users, Settings, User } from 'lucide-react';
+import { Calendar, Home, List, Play, Tv, Users, Settings, User, Upload, Menu, X } from 'lucide-react';
 import { AuthUser } from '@/lib/auth';
 
 interface HeaderProps {
@@ -19,58 +19,60 @@ const navigation = [
   { name: 'Contestants', href: '/contestants', icon: User },
   { name: 'Recording', href: '/recording', icon: Play },
   { name: 'Airing', href: '/airing', icon: Tv },
+  { name: 'Import', href: '/import', icon: Upload },
 ];
 
 export function Header({ user }: HeaderProps) {
   const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-md border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-4">
-              <div className="w-12 h-12 relative">
-                <Image
-                  src="/logo.png"
-                  alt="Pakistan Idol Logo"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-slate-900 font-bold text-xl">Pakistan Idol</span>
-                <span className="text-slate-600 text-sm font-medium">2025 Dashboard</span>
-              </div>
-            </Link>
-          </div>
+    <>
+      <header className="bg-white shadow-md border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-24">
+            {/* Logo */}
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center space-x-4">
+                <div className="w-20 h-20 relative">
+                  <Image
+                    src="/logo.png"
+                    alt="Pakistan Idol Logo"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-slate-900 font-bold text-2xl">Pakistan Idol</span>
+                  <span className="text-slate-600 text-base font-medium">2025 Dashboard</span>
+                </div>
+              </Link>
+            </div>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex space-x-1">
-            {navigation.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    isActive
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-slate-600 hover:text-primary hover:bg-primary/5'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-          </nav>
+            {/* Navigation */}
+            <nav className="hidden md:flex space-x-1">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      isActive
+                        ? 'bg-primary text-white shadow-md'
+                        : 'text-slate-600 hover:text-primary hover:bg-primary/5'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
 
-          {/* User Menu */}
-          <div className="flex items-center space-x-4">
+            {/* User Menu */}
             {user && (
               <div className="flex items-center space-x-3">
                 <div className="text-right">
@@ -122,7 +124,7 @@ export function Header({ user }: HeaderProps) {
             })}
           </nav>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }

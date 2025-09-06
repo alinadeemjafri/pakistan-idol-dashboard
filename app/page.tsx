@@ -17,7 +17,7 @@ import {
 import { getEpisodeStatus, formatPKTDate, formatPKTTime } from '@/lib/utils/status';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { StatusChip } from '@/components/ui/StatusChip';
-import { Calendar, MapPin, Clock, Tv, Play, AlertCircle, TrendingUp, UserX, Mic, Users, Star } from 'lucide-react';
+import { Calendar, MapPin, Clock, Tv, Play, AlertCircle, TrendingUp, UserX, Mic, Users, Star, Upload } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function HomePage() {
@@ -323,7 +323,7 @@ export default async function HomePage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-warning">{contestant.average_score.toFixed(1)}</p>
+                        <p className="font-semibold text-warning">{contestant.average_score?.toFixed(1) || '0.0'}</p>
                         <p className="text-xs text-slate-500">avg</p>
                       </div>
                     </div>
@@ -390,7 +390,7 @@ export default async function HomePage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Link href="/episodes/new">
                   <button className="w-full px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors flex items-center justify-center space-x-2">
                     <Calendar className="w-4 h-4" />
@@ -401,6 +401,12 @@ export default async function HomePage() {
                   <button className="w-full px-4 py-3 bg-secondary text-white rounded-lg hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2">
                     <Users className="w-4 h-4" />
                     <span>Add Contestant</span>
+                  </button>
+                </Link>
+                <Link href="/import">
+                  <button className="w-full px-4 py-3 bg-warning text-white rounded-lg hover:bg-warning-600 transition-colors flex items-center justify-center space-x-2">
+                    <Upload className="w-4 h-4" />
+                    <span>Import Data</span>
                   </button>
                 </Link>
                 <Link href="/calendar">

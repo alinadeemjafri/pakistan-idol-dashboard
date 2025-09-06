@@ -7,7 +7,7 @@ export interface Episode {
   episode_no: number;
   phase: string;
   city: string;
-  week?: string;
+  week: string | null;
   
   // Recording
   record_start: string; // ISO string
@@ -88,18 +88,18 @@ export interface Contestant {
   name: string;
   age: number;
   city: string;
-  phone?: string;
-  email?: string;
-  profile_image?: string;
-  bio?: string;
-  audition_date?: string;
+  phone: string | null;
+  email: string | null;
+  profile_image: string | null;
+  bio: string | null;
+  audition_date: string | null;
   audition_city: string;
-  audition_venue?: string;
+  audition_venue: string | null;
   status: ContestantStatus;
-  total_score: number;
-  average_score: number;
-  episodes_participated: number;
-  golden_mics_received: number;
+  total_score: number | null;
+  average_score: number | null;
+  episodes_participated: number | null;
+  golden_mics_received: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -110,7 +110,7 @@ export interface ContestantScore {
   episode_id: string;
   judge_name: string;
   score: number;
-  remarks?: string;
+  remarks: string | null;
   created_at: string;
 }
 
@@ -118,9 +118,9 @@ export interface ContestantEpisode {
   id: string;
   contestant_id: string;
   episode_id: string;
-  performance_order?: number;
-  song_title?: string;
-  performance_notes?: string;
+  performance_order: number | null;
+  song_title: string | null;
+  performance_notes: string | null;
   created_at: string;
 }
 
@@ -148,3 +148,6 @@ export interface JudgeScore {
   score: number;
   remarks?: string;
 }
+
+// Re-export types from schema for compatibility
+export type { Episode as NewEpisode, User as NewUser } from '@/lib/db/schema';

@@ -36,7 +36,7 @@ export async function PUT(
       ...data,
       updated_by: user.name,
       updated_at: new Date().toISOString(),
-    });
+    }, user.name);
 
     return NextResponse.json(episode);
   } catch (error) {

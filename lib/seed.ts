@@ -141,11 +141,11 @@ export async function seedDatabase() {
 
     // Update contestant statistics
     console.log('Updating contestant statistics...');
-    for (const [contestantName, contestantId] of contestantMap) {
+    for (const [contestantName, contestantId] of Array.from(contestantMap)) {
       const scores = await db.select().from(contestant_scores).where(eq(contestant_scores.contestant_id, contestantId));
       const episodes = await db.select().from(contestant_episodes).where(eq(contestant_episodes.contestant_id, contestantId));
       
-      const totalScore = scores.reduce((sum, score) => sum + score.score, 0);
+      const totalScore = scores.reduce((sum: number, score: any) => sum + score.score, 0);
       const averageScore = scores.length > 0 ? totalScore / scores.length : 0;
       const episodesParticipated = episodes.length;
       

@@ -2,19 +2,14 @@
 
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { getCurrentUser } from '@/lib/auth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { Upload, FileSpreadsheet, CheckCircle, AlertCircle } from 'lucide-react';
-import { parseExcelFile, getColumnHeaders, mapExcelDataToEpisodes, validateEpisodeData, ExcelMapping } from '@/lib/excel-import';
-import { EpisodeFormData } from '@/lib/types';
+import { parseExcelFile, getColumnHeaders, mapExcelDataToEpisodes, validateEpisodeData } from '@/lib/excel-import';
+import { EpisodeFormData, ExcelMapping } from '@/lib/types';
 
-interface ImportPageProps {
-  user: any;
-}
-
-export default function ImportPage({ user }: ImportPageProps) {
+export default function ImportPage() {
   const [file, setFile] = useState<File | null>(null);
   const [excelData, setExcelData] = useState<any[]>([]);
   const [mapping, setMapping] = useState<ExcelMapping>({
@@ -177,7 +172,7 @@ export default function ImportPage({ user }: ImportPageProps) {
   };
 
   return (
-    <Layout user={user}>
+    <Layout>
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div>

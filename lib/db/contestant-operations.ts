@@ -99,7 +99,7 @@ export async function getContestantsByCity(city: string): Promise<Contestant[]> 
     .orderBy(asc(contestants.name));
 }
 
-export async function getContestantsByStatus(status: string): Promise<Contestant[]> {
+export async function getContestantsByStatus(status: 'Competing' | 'Eliminated' | 'Winner' | 'Runner-up'): Promise<Contestant[]> {
   return await db.select()
     .from(contestants)
     .where(eq(contestants.status, status))

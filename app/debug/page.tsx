@@ -12,7 +12,7 @@ export default async function DebugPage() {
           <h2 className="font-semibold mb-2">Users in Database:</h2>
           {allUsers.length > 0 ? (
             <ul>
-              {allUsers.map(user => (
+              {allUsers.map((user: any) => (
                 <li key={user.id} className="mb-2">
                   <strong>Email:</strong> {user.email}<br/>
                   <strong>Name:</strong> {user.name}<br/>
