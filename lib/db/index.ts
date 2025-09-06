@@ -4,13 +4,14 @@ import Database from 'better-sqlite3';
 import postgres from 'postgres';
 import * as schema from './schema';
 
-const isProduction = process.env.NODE_ENV === 'production' && process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgresql');
+const isProduction = process.env.NODE_ENV === 'production' && (process.env.DATABASE_URL || process.env.DB_POSTGRES_URL);
 
 let db: any;
 
 if (isProduction) {
   // PostgreSQL for production
-  const sql = postgres(process.env.DATABASE_URL!);
+  const databaseUrl = process.env.DATABASE_URL || process.env.DB_POSTGRES_URL!;
+  const sql = postgres(databaseUrl);
   db = drizzlePg(sql, { schema });
 } else {
   // SQLite for development
