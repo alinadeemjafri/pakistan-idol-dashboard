@@ -13,7 +13,7 @@ export default function InitPage() {
     setResult(null);
 
     try {
-      const response = await fetch('/api/init-db', {
+      const response = await fetch('/api/fix-db', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
