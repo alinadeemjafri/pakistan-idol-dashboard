@@ -30,10 +30,10 @@ export default async function HomePage() {
   let nextAiring: any = null;
   let currentlyRecording: any = null;
   let currentlyAiring: any = null;
-  let contestantStats = { total: 0, active: 0, eliminated: 0 };
+  let contestantStats: any = { total: 0, active: 0, eliminated: 0 };
   let recentlyEliminated: any[] = [];
   let topPerformers: any[] = [];
-  let contestantProgress: any[] = [];
+  let contestantProgress: any = {};
 
   try {
     [
@@ -97,7 +97,7 @@ export default async function HomePage() {
             <CardContent className="p-6">
               {currentlyRecording.length > 0 ? (
                 <div className="space-y-3">
-                  {currentlyRecording.map((episode) => (
+                  {currentlyRecording.map((episode: any) => (
                     <div key={episode.episode_id} className="p-4 bg-white rounded-lg border border-warning/20">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-semibold text-slate-900">Episode {episode.episode_no}</h3>
@@ -142,7 +142,7 @@ export default async function HomePage() {
             <CardContent className="p-6">
               {currentlyAiring.length > 0 ? (
                 <div className="space-y-3">
-                  {currentlyAiring.map((episode) => (
+                  {currentlyAiring.map((episode: any) => (
                     <div key={episode.episode_id} className="p-4 bg-white rounded-lg border border-success/20">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-semibold text-slate-900">Episode {episode.episode_no}</h3>
@@ -290,24 +290,24 @@ export default async function HomePage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-600">Competing</span>
-                  <span className="text-2xl font-bold text-success">{contestantProgress.totalCompeting}</span>
+                  <span className="text-2xl font-bold text-success">{contestantProgress?.totalCompeting || 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-600">Eliminated</span>
-                  <span className="text-2xl font-bold text-slate-600">{contestantProgress.totalEliminated}</span>
+                  <span className="text-2xl font-bold text-slate-600">{contestantProgress?.totalEliminated || 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-600">Elimination Rate</span>
-                  <span className="text-lg font-semibold text-warning">{contestantProgress.eliminationRate.toFixed(1)}%</span>
+                  <span className="text-lg font-semibold text-warning">{(contestantProgress?.eliminationRate || 0).toFixed(1)}%</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-600">Avg Score</span>
-                  <span className="text-lg font-semibold text-primary">{contestantProgress.averageScore.toFixed(1)}</span>
+                  <span className="text-lg font-semibold text-primary">{(contestantProgress?.averageScore || 0).toFixed(1)}</span>
                 </div>
                 <div className="pt-2 border-t border-slate-200">
                   <div className="flex items-center space-x-2">
                     <MapPin className="w-4 h-4 text-slate-400" />
-                    <span className="text-sm text-slate-600">Top City: <span className="font-medium">{contestantProgress.topCity}</span></span>
+                    <span className="text-sm text-slate-600">Top City: <span className="font-medium">{contestantProgress?.topCity || 'N/A'}</span></span>
                   </div>
                 </div>
               </div>
@@ -370,7 +370,7 @@ export default async function HomePage() {
                   recentlyEliminated.map((contestant) => (
                     <div key={contestant.id} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
                       <div className="w-10 h-10 bg-danger rounded-full flex items-center justify-center text-white font-bold">
-                        {contestant.name.split(' ').map(n => n[0]).join('')}
+                        {contestant.name.split(' ').map((n: any) => n[0]).join('')}
                       </div>
                       <div className="flex-1">
                         <p className="font-medium text-slate-900">{contestant.name}</p>
