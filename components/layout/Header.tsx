@@ -90,11 +90,11 @@ export function Header({ user }: HeaderProps) {
                     </Button>
                   </Link>
                 )}
-                <form action="/api/auth/logout" method="post">
-                  <Button variant="ghost" size="sm" className="text-slate-600 hover:text-primary hover:bg-primary/5" type="submit">
+                <Link href="/logout">
+                  <Button variant="ghost" size="sm" className="text-slate-600 hover:text-primary hover:bg-primary/5">
                     Logout
                   </Button>
-                </form>
+                </Link>
               </div>
             )}
           </div>
