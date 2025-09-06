@@ -21,6 +21,7 @@ import { Calendar, MapPin, Clock, Tv, Play, AlertCircle, TrendingUp, UserX, Mic,
 import Link from 'next/link';
 
 export default async function HomePage() {
+  // Force redeploy - env var fix
   const user = await getCurrentUser();
   
   // Fetch all dashboard data
