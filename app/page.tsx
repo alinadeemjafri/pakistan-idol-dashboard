@@ -24,28 +24,43 @@ export default async function HomePage() {
   // Force redeploy - direct connection fix
   const user = await getCurrentUser();
   
-  // Fetch all dashboard data
-  const [
-    todayEpisodes,
-    nextRecording,
-    nextAiring,
-    currentlyRecording,
-    currentlyAiring,
-    contestantStats,
-    recentlyEliminated,
-    topPerformers,
-    contestantProgress
-  ] = await Promise.all([
-    getTodayEpisodes(),
-    getNextRecording(),
-    getNextAiring(),
-    getCurrentlyRecording(),
-    getCurrentlyAiring(),
-    getContestantStats(),
-    getRecentlyEliminated(),
-    getTopPerformers(),
-    getContestantProgress()
-  ]);
+  // Fetch all dashboard data with error handling
+  let todayEpisodes = [];
+  let nextRecording = null;
+  let nextAiring = null;
+  let currentlyRecording = null;
+  let currentlyAiring = null;
+  let contestantStats = { total: 0, active: 0, eliminated: 0 };
+  let recentlyEliminated = [];
+  let topPerformers = [];
+  let contestantProgress = [];
+
+  try {
+    [
+      todayEpisodes,
+      nextRecording,
+      nextAiring,
+      currentlyRecording,
+      currentlyAiring,
+      contestantStats,
+      recentlyEliminated,
+      topPerformers,
+      contestantProgress
+    ] = await Promise.all([
+      getTodayEpisodes(),
+      getNextRecording(),
+      getNextAiring(),
+      getCurrentlyRecording(),
+      getCurrentlyAiring(),
+      getContestantStats(),
+      getRecentlyEliminated(),
+      getTopPerformers(),
+      getContestantProgress()
+    ]);
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    // If tables don't exist, show empty state
+  }
 
   return (
     <Layout user={user}>
