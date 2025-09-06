@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 
 export default function InitPage() {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<any>(null);
 
   const initializeDatabase = async () => {
     setLoading(true);
