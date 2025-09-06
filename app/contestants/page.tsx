@@ -11,10 +11,10 @@ import Link from 'next/link';
 export default async function ContestantsPage() {
   const user = await getCurrentUser();
   
-  let contestants = [];
-  let stats = { total: 0, competing: 0, eliminated: 0, winners: 0, byCity: {}, byAuditionCity: {} };
-  let cities = [];
-  let auditionCities = [];
+  let contestants: any[] = [];
+  let stats: any = { total: 0, competing: 0, eliminated: 0, winners: 0, byCity: {}, byAuditionCity: {} };
+  let cities: string[] = [];
+  let auditionCities: string[] = [];
 
   try {
     contestants = await getAllContestants();
