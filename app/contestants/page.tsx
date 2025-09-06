@@ -10,12 +10,23 @@ import Link from 'next/link';
 
 export default async function ContestantsPage() {
   const user = await getCurrentUser();
-  const contestants = await getAllContestants();
-  const stats = await getContestantStats();
+  
+  let contestants = [];
+  let stats = { total: 0, competing: 0, eliminated: 0, winners: 0, byCity: {}, byAuditionCity: {} };
+  let cities = [];
+  let auditionCities = [];
 
-  // Get unique cities and audition cities for filters
-  const cities = [...new Set(contestants.map(c => c.city))].sort();
-  const auditionCities = [...new Set(contestants.map(c => c.audition_city))].sort();
+  try {
+    contestants = await getAllContestants();
+    stats = await getContestantStats();
+    
+    // Get unique cities and audition cities for filters
+    cities = [...new Set(contestants.map(c => c.city))].sort();
+    auditionCities = [...new Set(contestants.map(c => c.audition_city))].sort();
+  } catch (error) {
+    console.error('Error loading contestants:', error);
+    // If there's an error, show empty state
+  }
 
   return (
     <Layout user={user}>
