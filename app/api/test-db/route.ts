@@ -22,7 +22,7 @@ export async function GET() {
         WHERE table_name = 'episodes'
       `);
     } catch (error) {
-      episodesStructure = { error: error.message };
+      episodesStructure = { error: error instanceof Error ? error.message : 'Unknown error' };
     }
     
     // Test 3: Check users table
@@ -30,7 +30,7 @@ export async function GET() {
     try {
       usersResult = await db.execute(sql`SELECT * FROM users LIMIT 5`);
     } catch (error) {
-      usersResult = { error: error.message };
+      usersResult = { error: error instanceof Error ? error.message : 'Unknown error' };
     }
     
     // Test 4: Check episodes table
@@ -38,7 +38,7 @@ export async function GET() {
     try {
       episodesResult = await db.execute(sql`SELECT * FROM episodes LIMIT 5`);
     } catch (error) {
-      episodesResult = { error: error.message };
+      episodesResult = { error: error instanceof Error ? error.message : 'Unknown error' };
     }
     
     return NextResponse.json({
