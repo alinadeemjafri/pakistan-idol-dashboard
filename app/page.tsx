@@ -95,7 +95,7 @@ export default async function HomePage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              {currentlyRecording.length > 0 ? (
+              {currentlyRecording && currentlyRecording.length > 0 ? (
                 <div className="space-y-3">
                   {currentlyRecording.map((episode: any) => (
                     <div key={episode.episode_id} className="p-4 bg-white rounded-lg border border-warning/20">
@@ -140,7 +140,7 @@ export default async function HomePage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              {currentlyAiring.length > 0 ? (
+              {currentlyAiring && currentlyAiring.length > 0 ? (
                 <div className="space-y-3">
                   {currentlyAiring.map((episode: any) => (
                     <div key={episode.episode_id} className="p-4 bg-white rounded-lg border border-success/20">
@@ -366,7 +366,7 @@ export default async function HomePage() {
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-3">
-                {recentlyEliminated.length > 0 ? (
+                {recentlyEliminated && recentlyEliminated.length > 0 ? (
                   recentlyEliminated.map((contestant) => (
                     <div key={contestant.id} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
                       <div className="w-10 h-10 bg-danger rounded-full flex items-center justify-center text-white font-bold">
