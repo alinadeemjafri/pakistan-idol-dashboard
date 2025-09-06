@@ -25,15 +25,15 @@ export default async function HomePage() {
   const user = await getCurrentUser();
   
   // Fetch all dashboard data with error handling
-  let todayEpisodes = [];
-  let nextRecording = null;
-  let nextAiring = null;
-  let currentlyRecording = null;
-  let currentlyAiring = null;
+  let todayEpisodes: any[] = [];
+  let nextRecording: any = null;
+  let nextAiring: any = null;
+  let currentlyRecording: any = null;
+  let currentlyAiring: any = null;
   let contestantStats = { total: 0, active: 0, eliminated: 0 };
-  let recentlyEliminated = [];
-  let topPerformers = [];
-  let contestantProgress = [];
+  let recentlyEliminated: any[] = [];
+  let topPerformers: any[] = [];
+  let contestantProgress: any[] = [];
 
   try {
     [
