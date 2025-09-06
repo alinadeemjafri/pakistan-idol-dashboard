@@ -67,9 +67,15 @@ export async function POST() {
         city TEXT NOT NULL,
         phone TEXT,
         email TEXT,
-        status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'eliminated', 'winner')),
+        profile_image TEXT,
+        bio TEXT,
+        audition_date TEXT,
+        audition_city TEXT NOT NULL,
+        audition_venue TEXT,
+        status TEXT NOT NULL DEFAULT 'Competing' CHECK (status IN ('Competing', 'Eliminated', 'Winner', 'Runner-up')),
+        total_score REAL DEFAULT 0,
+        average_score REAL DEFAULT 0,
         golden_mics_received INTEGER NOT NULL DEFAULT 0,
-        average_score DECIMAL(3,1),
         created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
       )
@@ -113,11 +119,11 @@ export async function POST() {
 
     // Insert some sample contestants
     await db.execute(sql`
-      INSERT INTO contestants (id, name, age, city, status, golden_mics_received, average_score) 
+      INSERT INTO contestants (id, name, age, city, audition_city, status, golden_mics_received, average_score) 
       VALUES 
-      ('cont-001', 'Ali Ahmed', 25, 'Karachi', 'active', 0, 8.5),
-      ('cont-002', 'Sara Khan', 22, 'Lahore', 'active', 1, 9.2),
-      ('cont-003', 'Hassan Ali', 28, 'Islamabad', 'eliminated', 0, 7.8)
+      ('cont-001', 'Ali Ahmed', 25, 'Karachi', 'Karachi', 'Competing', 0, 8.5),
+      ('cont-002', 'Sara Khan', 22, 'Lahore', 'Lahore', 'Competing', 1, 9.2),
+      ('cont-003', 'Hassan Ali', 28, 'Islamabad', 'Islamabad', 'Eliminated', 0, 7.8)
     `);
 
     return NextResponse.json({
