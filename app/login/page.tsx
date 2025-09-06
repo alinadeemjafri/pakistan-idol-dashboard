@@ -10,11 +10,13 @@ import { useRouter } from 'next/navigation';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
     try {
       // Simple authentication - in production, use proper auth
@@ -28,11 +30,12 @@ export default function LoginPage() {
         router.push('/');
         router.refresh();
       } else {
-        alert('Login failed. Please try again.');
+        const errorData = await response.json();
+        setError(errorData.error || 'Login failed. Please try again.');
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('Login failed. Please try again.');
+      setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -60,6 +63,11 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
             <Button
               type="submit"
               className="w-full"
