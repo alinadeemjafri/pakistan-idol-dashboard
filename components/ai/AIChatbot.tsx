@@ -102,18 +102,46 @@ export default function AIChatbot({ className = '' }: AIChatbotProps) {
         if (done) break;
 
         const chunk = new TextDecoder().decode(value);
+        console.log('Received chunk:', chunk); // Debug log
         const lines = chunk.split('\n');
         
         for (const line of lines) {
+          if (line.trim() === '') continue;
+          console.log('Processing line:', line); // Debug log
+          
+          // Handle AI SDK text stream format
           if (line.startsWith('0:')) {
+            // AI SDK format - content after the colon
             const content = line.slice(2);
             assistantMessage += content;
-            setMessages(prev => prev.map(msg => 
-              msg.id === assistantMessageId 
-                ? { ...msg, content: assistantMessage }
-                : msg
-            ));
+            console.log('Added content:', content); // Debug log
+          } else if (line.startsWith('1:')) {
+            // Skip metadata lines
+            continue;
+          } else if (line.includes('"content"')) {
+            // Try to extract content from JSON-like strings
+            try {
+              const match = line.match(/"content":"([^"]*)"/);
+              if (match) {
+                assistantMessage += match[1];
+                console.log('Added JSON content:', match[1]); // Debug log
+              }
+            } catch (e) {
+              // Fallback: add the line as is
+              assistantMessage += line;
+            }
+          } else if (line.trim() && !line.startsWith('data:') && !line.startsWith('event:')) {
+            // Add any other non-empty content
+            assistantMessage += line;
+            console.log('Added fallback content:', line); // Debug log
           }
+          
+          // Update the message with accumulated content
+          setMessages(prev => prev.map(msg => 
+            msg.id === assistantMessageId 
+              ? { ...msg, content: assistantMessage }
+              : msg
+          ));
         }
       }
     } catch (error) {
