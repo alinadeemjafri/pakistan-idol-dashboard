@@ -16,7 +16,7 @@ import {
 import { getEpisodeStatus, formatPKTDate, formatPKTTime } from '@/lib/utils/status';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { StatusChip } from '@/components/ui/StatusChip';
-import { Calendar, MapPin, Clock, Tv, Play, AlertCircle, TrendingUp, UserX, Mic, Users, Star, Upload, Timeline } from 'lucide-react';
+import { Calendar, MapPin, Clock, Tv, Play, AlertCircle, TrendingUp, UserX, Mic, Users, Star, Upload, Activity } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function HomePage() {
@@ -193,7 +193,7 @@ export default async function HomePage() {
           <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
             <CardTitle className="flex items-center space-x-2">
               <div className="p-2 bg-success rounded-lg">
-                <Timeline className="w-5 h-5 text-white" />
+                <Activity className="w-5 h-5 text-white" />
               </div>
               <span>Production Timeline - Next 7 Days</span>
             </CardTitle>
@@ -250,7 +250,7 @@ export default async function HomePage() {
               </div>
             ) : (
               <div className="text-center py-8 text-slate-500">
-                <Timeline className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+                <Activity className="w-12 h-12 mx-auto mb-3 text-slate-300" />
                 <p>No upcoming episodes in the next 7 days</p>
               </div>
             )}
