@@ -4,9 +4,8 @@ import { getCurrentUser } from '@/lib/auth';
 import { 
   getTodayEpisodes, 
   getNextRecording, 
-  getNextAiring, 
-  getCurrentlyRecording, 
-  getCurrentlyAiring 
+  getNextAiring,
+  getAllEpisodes
 } from '@/lib/db/operations';
 import { 
   getContestantStats, 
@@ -17,50 +16,58 @@ import {
 import { getEpisodeStatus, formatPKTDate, formatPKTTime } from '@/lib/utils/status';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { StatusChip } from '@/components/ui/StatusChip';
-import { Calendar, MapPin, Clock, Tv, Play, AlertCircle, TrendingUp, UserX, Mic, Users, Star, Upload } from 'lucide-react';
+import { Calendar, MapPin, Clock, Tv, Play, AlertCircle, TrendingUp, UserX, Mic, Users, Star, Upload, Timeline } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function HomePage() {
-  // Force redeploy - direct connection fix
   const user = await getCurrentUser();
   
   // Fetch all dashboard data with error handling
   let todayEpisodes: any[] = [];
   let nextRecording: any = null;
   let nextAiring: any = null;
-  let currentlyRecording: any = null;
-  let currentlyAiring: any = null;
   let contestantStats: any = { total: 0, active: 0, eliminated: 0 };
   let recentlyEliminated: any[] = [];
   let topPerformers: any[] = [];
   let contestantProgress: any = {};
+  let upcomingEpisodes: any[] = [];
 
   try {
     [
       todayEpisodes,
       nextRecording,
       nextAiring,
-      currentlyRecording,
-      currentlyAiring,
       contestantStats,
       recentlyEliminated,
       topPerformers,
-      contestantProgress
+      contestantProgress,
+      upcomingEpisodes
     ] = await Promise.all([
       getTodayEpisodes(),
       getNextRecording(),
       getNextAiring(),
-      getCurrentlyRecording(),
-      getCurrentlyAiring(),
       getContestantStats(),
       getRecentlyEliminated(),
       getTopPerformers(),
-      getContestantProgress()
+      getContestantProgress(),
+      getAllEpisodes()
     ]);
   } catch (error) {
     console.error('Error fetching dashboard data:', error);
     // If tables don't exist, show empty state
   }
+
+  // Get upcoming episodes for timeline (next 7 days)
+  const now = new Date();
+  const nextWeek = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+  
+  const timelineEpisodes = upcomingEpisodes
+    .filter(episode => {
+      const airDate = new Date(episode.air_start);
+      return airDate >= now && airDate <= nextWeek;
+    })
+    .sort((a, b) => new Date(a.air_start).getTime() - new Date(b.air_start).getTime())
+    .slice(0, 5);
 
   return (
     <Layout user={user}>
@@ -80,99 +87,6 @@ export default async function HomePage() {
               </p>
             </div>
           </div>
-        </div>
-
-        {/* Live Status - Priority Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Currently Recording */}
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-warning/10 to-warning/5 hover:shadow-xl transition-all duration-200">
-            <CardHeader className="bg-gradient-to-r from-warning/20 to-warning/10 border-b border-warning/20">
-              <CardTitle className="flex items-center space-x-2 text-warning-800">
-                <div className="p-2 bg-warning rounded-lg">
-                  <Play className="w-5 h-5 text-white" />
-                </div>
-                <span>Currently Recording</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              {currentlyRecording && currentlyRecording.length > 0 ? (
-                <div className="space-y-3">
-                  {currentlyRecording.map((episode: any) => (
-                    <div key={episode.episode_id} className="p-4 bg-white rounded-lg border border-warning/20">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold text-slate-900">Episode {episode.episode_no}</h3>
-                        <StatusChip status="Recording" />
-                      </div>
-                      <div className="text-sm text-slate-600 space-y-1">
-                        <div className="flex items-center space-x-2">
-                          <MapPin className="w-4 h-4" />
-                          <span>{episode.city} - {episode.phase}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Clock className="w-4 h-4" />
-                          <span>{formatPKTTime(episode.record_start)} - {formatPKTTime(episode.record_end)}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Mic className="w-4 h-4" />
-                          <span>{episode.record_venue}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-slate-500">
-                  <Play className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-                  <p>No recordings in progress</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Currently Airing */}
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-success/10 to-success/5 hover:shadow-xl transition-all duration-200">
-            <CardHeader className="bg-gradient-to-r from-success/20 to-success/10 border-b border-success/20">
-              <CardTitle className="flex items-center space-x-2 text-success-800">
-                <div className="p-2 bg-success rounded-lg">
-                  <Tv className="w-5 h-5 text-white" />
-                </div>
-                <span>Currently Airing</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              {currentlyAiring && currentlyAiring.length > 0 ? (
-                <div className="space-y-3">
-                  {currentlyAiring.map((episode: any) => (
-                    <div key={episode.episode_id} className="p-4 bg-white rounded-lg border border-success/20">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-semibold text-slate-900">Episode {episode.episode_no}</h3>
-                        <StatusChip status="Airing" />
-                      </div>
-                      <div className="text-sm text-slate-600 space-y-1">
-                        <div className="flex items-center space-x-2">
-                          <MapPin className="w-4 h-4" />
-                          <span>{episode.city} - {episode.phase}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Clock className="w-4 h-4" />
-                          <span>{formatPKTTime(episode.air_start)} - {formatPKTTime(episode.air_end)}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Tv className="w-4 h-4" />
-                          <span>{episode.channel}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-slate-500">
-                  <Tv className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-                  <p>No episodes airing now</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </div>
 
         {/* Next Up - Recording Priority */}
@@ -274,6 +188,75 @@ export default async function HomePage() {
           </Card>
         </div>
 
+        {/* Timeline View */}
+        <Card className="border border-slate-200 shadow-md bg-white">
+          <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
+            <CardTitle className="flex items-center space-x-2">
+              <div className="p-2 bg-success rounded-lg">
+                <Timeline className="w-5 h-5 text-white" />
+              </div>
+              <span>Production Timeline - Next 7 Days</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            {timelineEpisodes.length > 0 ? (
+              <div className="space-y-4">
+                {timelineEpisodes.map((episode, index) => {
+                  const isLast = index === timelineEpisodes.length - 1;
+                  const status = getEpisodeStatus(episode);
+                  
+                  return (
+                    <div key={episode.episode_id} className="flex items-start space-x-4">
+                      {/* Timeline line */}
+                      <div className="flex flex-col items-center">
+                        <div className={`w-4 h-4 rounded-full border-2 ${
+                          status === 'Airing' ? 'bg-success border-success' :
+                          status === 'Recording' ? 'bg-warning border-warning' :
+                          'bg-slate-300 border-slate-300'
+                        }`}></div>
+                        {!isLast && <div className="w-0.5 h-8 bg-slate-200 mt-2"></div>}
+                      </div>
+                      
+                      {/* Episode info */}
+                      <div className="flex-1 pb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-semibold text-slate-900">
+                            Episode {episode.episode_no} - {episode.phase}
+                          </h4>
+                          <StatusChip status={status} />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600">
+                          <div className="flex items-center space-x-2">
+                            <Calendar className="w-4 h-4" />
+                            <span>{formatPKTDate(episode.air_start, 'dd MMM yyyy')}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Clock className="w-4 h-4" />
+                            <span>{formatPKTTime(episode.air_start)} - {formatPKTTime(episode.air_end)}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <MapPin className="w-4 h-4" />
+                            <span>{episode.city}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Tv className="w-4 h-4" />
+                            <span>{episode.channel}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-slate-500">
+                <Timeline className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+                <p>No upcoming episodes in the next 7 days</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Contestant Status */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Contestant Stats */}
@@ -295,10 +278,6 @@ export default async function HomePage() {
                 <div className="flex items-center justify-between">
                   <span className="text-slate-600">Eliminated</span>
                   <span className="text-2xl font-bold text-slate-600">{contestantProgress?.totalEliminated || 0}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-600">Elimination Rate</span>
-                  <span className="text-lg font-semibold text-warning">{(contestantProgress?.eliminationRate || 0).toFixed(1)}%</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-600">Avg Score</span>
