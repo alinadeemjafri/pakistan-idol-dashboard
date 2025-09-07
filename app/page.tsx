@@ -71,18 +71,18 @@ export default async function HomePage() {
 
   return (
     <Layout user={user}>
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="inline-flex items-center space-x-4 mb-6">
-            <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-200">
-              <span className="text-primary font-bold text-xl">🎤</span>
+          <div className="inline-flex items-center space-x-4 mb-8">
+            <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg border border-slate-200">
+              <span className="text-primary font-bold text-2xl">🎤</span>
             </div>
             <div className="text-left">
-              <h1 className="text-3xl font-bold text-slate-900">
+              <h1 className="text-3xl lg:text-4xl font-bold text-slate-900">
                 Production Dashboard
               </h1>
-              <p className="text-slate-600 text-sm">
+              <p className="text-slate-600 text-sm lg:text-base">
                 {formatPKTDate(new Date(), 'dd MMMM yyyy')} - Live Status
               </p>
             </div>
@@ -90,15 +90,15 @@ export default async function HomePage() {
         </div>
 
         {/* Next Up - Recording Priority */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Next Recording */}
-          <Card className="border border-slate-200 shadow-md bg-white">
-            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-              <CardTitle className="flex items-center space-x-2">
-                <div className="p-2 bg-primary rounded-lg">
+          <Card className="border border-slate-200 shadow-lg bg-white hover:shadow-xl transition-shadow duration-200">
+            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 p-6">
+              <CardTitle className="flex items-center space-x-3">
+                <div className="p-3 bg-primary rounded-lg">
                   <Calendar className="w-5 h-5 text-white" />
                 </div>
-                <span>Next Recording</span>
+                <span className="text-lg font-semibold">Next Recording</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -140,13 +140,13 @@ export default async function HomePage() {
           </Card>
 
           {/* Next Airing */}
-          <Card className="border border-slate-200 shadow-md bg-white">
-            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-              <CardTitle className="flex items-center space-x-2">
-                <div className="p-2 bg-secondary rounded-lg">
+          <Card className="border border-slate-200 shadow-lg bg-white hover:shadow-xl transition-shadow duration-200">
+            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 p-6">
+              <CardTitle className="flex items-center space-x-3">
+                <div className="p-3 bg-secondary rounded-lg">
                   <Tv className="w-5 h-5 text-white" />
                 </div>
-                <span>Next Airing</span>
+                <span className="text-lg font-semibold">Next Airing</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -189,13 +189,13 @@ export default async function HomePage() {
         </div>
 
         {/* Timeline View */}
-        <Card className="border border-slate-200 shadow-md bg-white">
-          <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-            <CardTitle className="flex items-center space-x-2">
-              <div className="p-2 bg-success rounded-lg">
+        <Card className="border border-slate-200 shadow-lg bg-white hover:shadow-xl transition-shadow duration-200">
+          <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 p-6">
+            <CardTitle className="flex items-center space-x-3">
+              <div className="p-3 bg-success rounded-lg">
                 <Activity className="w-5 h-5 text-white" />
               </div>
-              <span>Production Timeline - Next 30 Days</span>
+              <span className="text-lg font-semibold">Production Timeline - Next 30 Days</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
@@ -258,15 +258,15 @@ export default async function HomePage() {
         </Card>
 
         {/* Contestant Status */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Contestant Stats */}
-          <Card className="border border-slate-200 shadow-md bg-white">
-            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-              <CardTitle className="flex items-center space-x-2">
-                <div className="p-2 bg-primary rounded-lg">
+          <Card className="border border-slate-200 shadow-lg bg-white hover:shadow-xl transition-shadow duration-200">
+            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 p-6">
+              <CardTitle className="flex items-center space-x-3">
+                <div className="p-3 bg-primary rounded-lg">
                   <Users className="w-5 h-5 text-white" />
                 </div>
-                <span>Contestant Status</span>
+                <span className="text-lg font-semibold">Contestant Status</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -294,13 +294,13 @@ export default async function HomePage() {
           </Card>
 
           {/* Top Performers */}
-          <Card className="border border-slate-200 shadow-md bg-white">
-            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-              <CardTitle className="flex items-center space-x-2">
-                <div className="p-2 bg-warning rounded-lg">
+          <Card className="border border-slate-200 shadow-lg bg-white hover:shadow-xl transition-shadow duration-200">
+            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 p-6">
+              <CardTitle className="flex items-center space-x-3">
+                <div className="p-3 bg-warning rounded-lg">
                   <Star className="w-5 h-5 text-white" />
                 </div>
-                <span>Top Performers</span>
+                <span className="text-lg font-semibold">Top Performers</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -334,13 +334,13 @@ export default async function HomePage() {
           </Card>
 
           {/* Recent Eliminations */}
-          <Card className="border border-slate-200 shadow-md bg-white">
-            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-              <CardTitle className="flex items-center space-x-2">
-                <div className="p-2 bg-danger rounded-lg">
+          <Card className="border border-slate-200 shadow-lg bg-white hover:shadow-xl transition-shadow duration-200">
+            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 p-6">
+              <CardTitle className="flex items-center space-x-3">
+                <div className="p-3 bg-danger rounded-lg">
                   <UserX className="w-5 h-5 text-white" />
                 </div>
-                <span>Recent Eliminations</span>
+                <span className="text-lg font-semibold">Recent Eliminations</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -375,39 +375,39 @@ export default async function HomePage() {
 
         {/* Quick Actions */}
         {user?.role === 'Editor' && (
-          <Card className="border border-slate-200 shadow-md bg-white">
-            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-              <CardTitle className="flex items-center space-x-2">
-                <div className="p-2 bg-primary rounded-lg">
+          <Card className="border border-slate-200 shadow-lg bg-white hover:shadow-xl transition-shadow duration-200">
+            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 p-6">
+              <CardTitle className="flex items-center space-x-3">
+                <div className="p-3 bg-primary rounded-lg">
                   <AlertCircle className="w-5 h-5 text-white" />
                 </div>
-                <span>Quick Actions</span>
+                <span className="text-lg font-semibold">Quick Actions</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 <Link href="/episodes/new">
-                  <button className="w-full px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors flex items-center justify-center space-x-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>Add Episode</span>
+                  <button className="w-full px-6 py-4 bg-primary text-white rounded-lg hover:bg-primary-600 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg">
+                    <Calendar className="w-5 h-5" />
+                    <span className="font-medium">Add Episode</span>
                   </button>
                 </Link>
                 <Link href="/contestants/new">
-                  <button className="w-full px-4 py-3 bg-secondary text-white rounded-lg hover:bg-secondary-600 transition-colors flex items-center justify-center space-x-2">
-                    <Users className="w-4 h-4" />
-                    <span>Add Contestant</span>
+                  <button className="w-full px-6 py-4 bg-secondary text-white rounded-lg hover:bg-secondary-600 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg">
+                    <Users className="w-5 h-5" />
+                    <span className="font-medium">Add Contestant</span>
                   </button>
                 </Link>
                 <Link href="/import">
-                  <button className="w-full px-4 py-3 bg-warning text-white rounded-lg hover:bg-warning-600 transition-colors flex items-center justify-center space-x-2">
-                    <Upload className="w-4 h-4" />
-                    <span>Import Data</span>
+                  <button className="w-full px-6 py-4 bg-warning text-white rounded-lg hover:bg-warning-600 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg">
+                    <Upload className="w-5 h-5" />
+                    <span className="font-medium">Import Data</span>
                   </button>
                 </Link>
                 <Link href="/calendar">
-                  <button className="w-full px-4 py-3 bg-success text-white rounded-lg hover:bg-success-600 transition-colors flex items-center justify-center space-x-2">
-                    <TrendingUp className="w-4 h-4" />
-                    <span>View Calendar</span>
+                  <button className="w-full px-6 py-4 bg-success text-white rounded-lg hover:bg-success-600 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg">
+                    <TrendingUp className="w-5 h-5" />
+                    <span className="font-medium">View Calendar</span>
                   </button>
                 </Link>
               </div>
