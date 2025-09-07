@@ -62,20 +62,11 @@ export async function POST() {
     await db.execute(sql`
       CREATE TABLE contestants (
         id TEXT PRIMARY KEY,
+        serial_number INTEGER NOT NULL,
         name TEXT NOT NULL,
-        age INTEGER NOT NULL,
+        contact TEXT NOT NULL,
         city TEXT NOT NULL,
-        phone TEXT,
-        email TEXT,
-        profile_image TEXT,
-        bio TEXT,
-        audition_date TEXT,
-        audition_city TEXT NOT NULL,
-        audition_venue TEXT,
-        status TEXT NOT NULL DEFAULT 'Competing' CHECK (status IN ('Competing', 'Eliminated', 'Winner', 'Runner-up')),
-        total_score REAL DEFAULT 0,
-        average_score REAL DEFAULT 0,
-        golden_mics_received INTEGER NOT NULL DEFAULT 0,
+        status TEXT NOT NULL DEFAULT 'Competing' CHECK (status IN ('Competing', 'Eliminated')),
         created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
       )

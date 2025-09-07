@@ -1,4 +1,4 @@
-id,name,age,city,phone,email,profile_image,bio,audition_date,audition_city,audition_venue,status,total_score,average_score,episodes_participated,golden_mics_received
-cont-001,Ali Ahmed,25,Karachi,03001234567,ali.ahmed@example.com,https://example.com/ali.jpg,A passionate singer from Karachi,2025-01-15,Karachi,Karachi Studio,Competing,0,0,0,0
-cont-002,Sara Khan,22,Lahore,03017654321,sara.khan@example.com,https://example.com/sara.jpg,A soulful voice from Lahore,2025-01-22,Lahore,Lahore Studio,Competing,0,0,0,0
-cont-003,Hassan Ali,28,Islamabad,03021122334,hassan.ali@example.com,https://example.com/hassan.jpg,A powerful performer,2025-01-29,Islamabad,Islamabad Studio,Eliminated,0,0,0,0
+id,serial_number,name,contact,city,status
+cont-001,1,Ali Ahmed,03001234567,Karachi,Competing
+cont-002,2,Sara Khan,03017654321,Lahore,Competing
+cont-003,3,Hassan Ali,03021122334,Islamabad,Eliminated

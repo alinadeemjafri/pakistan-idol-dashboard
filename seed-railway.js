@@ -103,28 +103,18 @@ async function seedDatabase() {
     const contestants = [
       {
         id: uuidv4(),
+        serial_number: 1,
         name: 'Ayesha Khan',
-        age: 22,
+        contact: '+92-300-1234567',
         city: 'Karachi',
-        phone: '+92-300-1234567',
-        email: 'ayesha.khan@email.com',
-        bio: 'Classical singer with 5 years of training. Specializes in ghazals and classical music.',
-        audition_date: '2024-12-10T10:00:00+05:00',
-        audition_city: 'Karachi',
-        audition_venue: 'Karachi Arts Council',
         status: 'Competing'
       },
       {
         id: uuidv4(),
+        serial_number: 2,
         name: 'Hassan Ali',
-        age: 25,
+        contact: '+92-300-2345678',
         city: 'Lahore',
-        phone: '+92-300-2345678',
-        email: 'hassan.ali@email.com',
-        bio: 'Pop singer and guitarist. Performs contemporary Pakistani and international songs.',
-        audition_date: '2024-12-11T14:00:00+05:00',
-        audition_city: 'Lahore',
-        audition_venue: 'Alhamra Arts Council',
         status: 'Competing'
       }
     ];
@@ -132,13 +122,10 @@ async function seedDatabase() {
     for (const contestant of contestants) {
       await sql`
         INSERT INTO contestants (
-          id, name, age, city, phone, email, bio, audition_date,
-          audition_city, audition_venue, status, created_at, updated_at
+          id, serial_number, name, contact, city, status, created_at, updated_at
         ) VALUES (
-          ${contestant.id}, ${contestant.name}, ${contestant.age}, ${contestant.city},
-          ${contestant.phone}, ${contestant.email}, ${contestant.bio}, ${contestant.audition_date},
-          ${contestant.audition_city}, ${contestant.audition_venue}, ${contestant.status},
-          ${new Date().toISOString()}, ${new Date().toISOString()}
+          ${contestant.id}, ${contestant.serial_number}, ${contestant.name}, ${contestant.contact},
+          ${contestant.city}, ${contestant.status}, ${new Date().toISOString()}, ${new Date().toISOString()}
         )
       `;
     }

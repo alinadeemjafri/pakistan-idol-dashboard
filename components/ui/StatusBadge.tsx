@@ -22,18 +22,6 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
           text: 'text-danger-800',
           icon: '❌',
         };
-      case 'Winner':
-        return {
-          bg: 'bg-secondary/20',
-          text: 'text-secondary-800',
-          icon: '👑',
-        };
-      case 'Runner-up':
-        return {
-          bg: 'bg-warning/20',
-          text: 'text-warning-800',
-          icon: '🥈',
-        };
       default:
         return {
           bg: 'bg-slate/20',
