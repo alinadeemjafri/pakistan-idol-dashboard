@@ -60,13 +60,13 @@ export default async function HomePage() {
     // If tables don't exist, show empty state
   }
 
-  // Get upcoming episodes for timeline (next 7 days)
+  // Get upcoming episodes for timeline (next 30 days)
   const now = new Date();
-  const nextWeek = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+  const nextMonth = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000));
   
   // Debug logging
   console.log('Debug - Current time:', now.toISOString());
-  console.log('Debug - Next week:', nextWeek.toISOString());
+  console.log('Debug - Next month:', nextMonth.toISOString());
   console.log('Debug - Total episodes fetched:', upcomingEpisodes.length);
   console.log('Debug - First few episodes:', upcomingEpisodes.slice(0, 3).map(ep => ({
     episode_no: ep.episode_no,
@@ -77,7 +77,7 @@ export default async function HomePage() {
   const timelineEpisodes = upcomingEpisodes
     .filter(episode => {
       const airDate = new Date(episode.air_start);
-      const isInRange = airDate >= now && airDate <= nextWeek;
+      const isInRange = airDate >= now && airDate <= nextMonth;
       console.log(`Debug - Episode ${episode.episode_no}: ${episode.air_start} -> ${airDate.toISOString()} -> ${isInRange}`);
       return isInRange;
     })
@@ -96,7 +96,7 @@ export default async function HomePage() {
           </CardHeader>
           <CardContent className="text-sm text-red-700">
             <p>Current time: {now.toISOString()}</p>
-            <p>Next week: {nextWeek.toISOString()}</p>
+            <p>Next month: {nextMonth.toISOString()}</p>
             <p>Total episodes fetched: {upcomingEpisodes.length}</p>
             <p>Timeline episodes found: {timelineEpisodes.length}</p>
             {upcomingEpisodes.length > 0 && (
@@ -236,7 +236,7 @@ export default async function HomePage() {
               <div className="p-2 bg-success rounded-lg">
                 <Activity className="w-5 h-5 text-white" />
               </div>
-              <span>Production Timeline - Next 7 Days</span>
+              <span>Production Timeline - Next 30 Days</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
@@ -292,7 +292,7 @@ export default async function HomePage() {
             ) : (
               <div className="text-center py-8 text-slate-500">
                 <Activity className="w-12 h-12 mx-auto mb-3 text-slate-300" />
-                <p>No upcoming episodes in the next 7 days</p>
+                <p>No upcoming episodes in the next 30 days</p>
               </div>
             )}
           </CardContent>
