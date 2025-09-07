@@ -5,8 +5,10 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { ContestantCard } from '@/components/contestants/ContestantCard';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Search, Users, X } from 'lucide-react';
 import { Contestant } from '@/lib/types';
+import Link from 'next/link';
 
 interface ContestantsListProps {
   contestants: Contestant[];
@@ -127,25 +129,60 @@ export function ContestantsList({ contestants, cities, auditionCities }: Contest
       </div>
 
       {/* Contestants List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredContestants.length > 0 ? (
-          filteredContestants.map((contestant) => (
-            <ContestantCard key={contestant.id} contestant={contestant} />
-          ))
-        ) : (
-          <div className="col-span-full">
-            <Card className="border border-slate-200 shadow-sm bg-white">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-slate-400" />
+      {filteredContestants.length > 0 ? (
+        <>
+          {/* Mobile Compact List View */}
+          <div className="md:hidden space-y-2">
+            {filteredContestants.map((contestant) => (
+              <Link key={contestant.id} href={`/contestants/${contestant.id}`}>
+                <div className="bg-white border border-slate-200 rounded-lg p-3 hover:bg-slate-50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        {contestant.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <span className="font-semibold text-slate-900 text-sm">{contestant.name}</span>
+                          <StatusBadge status={contestant.status} />
+                        </div>
+                        <div className="text-xs text-slate-600 mt-1">
+                          {contestant.city} • {contestant.age} years
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs font-semibold text-warning">
+                        {contestant.average_score?.toFixed(1) || '0.0'}
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {contestant.episodes_participated} eps
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">No contestants found</h3>
-                <p className="text-slate-600">Try adjusting your search criteria or filters.</p>
-              </CardContent>
-            </Card>
+              </Link>
+            ))}
           </div>
-        )}
-      </div>
+
+          {/* Desktop Grid View */}
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredContestants.map((contestant) => (
+              <ContestantCard key={contestant.id} contestant={contestant} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <Card className="border border-slate-200 shadow-sm bg-white">
+          <CardContent className="p-8 text-center">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="w-8 h-8 text-slate-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">No contestants found</h3>
+            <p className="text-slate-600">Try adjusting your search criteria or filters.</p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
