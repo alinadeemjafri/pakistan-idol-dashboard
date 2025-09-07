@@ -82,7 +82,7 @@ export function ContestantDetailClient({ contestant, user }: ContestantDetailCli
                 <span className="text-sm font-medium text-slate-600">Serial Number</span>
                 <InlineEdit
                   value={contestant.serial_number}
-                  onSave={(value) => handleUpdateContestant('serial_number', parseInt(value))}
+                  onSave={(value) => handleUpdateContestant('serial_number', parseInt(String(value)))}
                   type="number"
                   canEdit={isEditor}
                   className="font-semibold text-primary"
