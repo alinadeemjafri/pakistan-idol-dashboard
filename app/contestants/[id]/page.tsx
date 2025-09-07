@@ -13,15 +13,21 @@ interface ContestantProfilePageProps {
 
 export default async function ContestantProfilePage({ params }: ContestantProfilePageProps) {
   const user = await getCurrentUser();
-  const contestant = await getContestantWithScores(params.id);
+  
+  try {
+    const contestant = await getContestantWithScores(params.id);
 
-  if (!contestant) {
+    if (!contestant) {
+      notFound();
+    }
+
+    return (
+      <Layout user={user}>
+        <ContestantDetailClient contestant={contestant} user={user} />
+      </Layout>
+    );
+  } catch (error) {
+    console.error('Error loading contestant:', error);
     notFound();
   }
-
-  return (
-    <Layout user={user}>
-      <ContestantDetailClient contestant={contestant} user={user} />
-    </Layout>
-  );
 }

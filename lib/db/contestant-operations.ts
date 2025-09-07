@@ -14,17 +14,22 @@ export async function getContestantById(id: string): Promise<Contestant | null> 
 }
 
 export async function getContestantWithScores(id: string): Promise<ContestantWithScores | null> {
-  const contestant = await getContestantById(id);
-  if (!contestant) return null;
+  try {
+    const contestant = await getContestantById(id);
+    if (!contestant) return null;
 
-  const scores = await db.select().from(contestant_scores).where(eq(contestant_scores.contestant_id, id));
-  const contestantEpisodes = await db.select().from(contestant_episodes).where(eq(contestant_episodes.contestant_id, id));
+    const scores = await db.select().from(contestant_scores).where(eq(contestant_scores.contestant_id, id));
+    const contestantEpisodes = await db.select().from(contestant_episodes).where(eq(contestant_episodes.contestant_id, id));
 
-  return {
-    ...contestant,
-    scores,
-    episodes: contestantEpisodes,
-  };
+    return {
+      ...contestant,
+      scores,
+      episodes: contestantEpisodes,
+    };
+  } catch (error) {
+    console.error('Error in getContestantWithScores:', error);
+    return null;
+  }
 }
 
 export async function createContestant(data: ContestantFormData): Promise<Contestant> {
