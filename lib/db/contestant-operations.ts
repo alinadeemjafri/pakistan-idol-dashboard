@@ -1,15 +1,24 @@
-import { db, contestants, contestant_scores, contestant_episodes, episodes } from '@/lib/db';
+import { db } from '@/lib/db';
+import { currentContestants, currentContestantScores, currentContestantEpisodes, currentEpisodes } from '@/lib/db/schema';
+import { currentContestants as pgContestants, currentContestantScores as pgContestantScores, currentContestantEpisodes as pgContestantEpisodes, currentEpisodes as pgEpisodes } from '@/lib/db/schema-postgres';
+
+// Use the correct schema based on environment
+const isProduction = process.env.NODE_ENV === 'production' && (process.env.DATABASE_URL || process.env.DB_POSTGRES_URL);
+const currentContestants = isProduction ? pgContestants : currentContestants;
+const currentContestantScores = isProduction ? pgContestantScores : currentContestantScores;
+const currentContestantEpisodes = isProduction ? pgContestantEpisodes : currentContestantEpisodes;
+const currentEpisodes = isProduction ? pgEpisodes : currentEpisodes;
 import { eq, desc, asc, and, like, or, sql, gte } from 'drizzle-orm';
 import { Contestant, ContestantScore, ContestantEpisode, ContestantFormData, ContestantWithScores } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 
 // Contestant operations
 export async function getAllContestants(): Promise<Contestant[]> {
-  return await db.select().from(contestants).orderBy(asc(contestants.name));
+  return await db.select().from(currentContestants).orderBy(asc(currentContestants.name));
 }
 
 export async function getContestantById(id: string): Promise<Contestant | null> {
-  const result = await db.select().from(contestants).where(eq(contestants.id, id)).limit(1);
+  const result = await db.select().from(currentContestants).where(eq(currentContestants.id, id)).limit(1);
   return result[0] || null;
 }
 
@@ -17,13 +26,13 @@ export async function getContestantWithScores(id: string): Promise<ContestantWit
   const contestant = await getContestantById(id);
   if (!contestant) return null;
 
-  const scores = await db.select().from(contestant_scores).where(eq(contestant_scores.contestant_id, id));
-  const contestantEpisodes = await db.select().from(contestant_episodes).where(eq(contestant_episodes.contestant_id, id));
+  const scores = await db.select().from(currentContestantScores).where(eq(currentContestantScores.contestant_id, id));
+  const contestantEpisodes = await db.select().from(currentContestantEpisodes).where(eq(currentContestantEpisodes.contestant_id, id));
 
   return {
     ...contestant,
     scores,
-    episodes: contestantEpisodes,
+    currentEpisodes: contestantEpisodes,
   };
 }
 
@@ -46,71 +55,71 @@ export async function createContestant(data: ContestantFormData): Promise<Contes
     status: data.status,
     total_score: 0,
     average_score: 0,
-    episodes_participated: 0,
+    currentEpisodes_participated: 0,
     golden_mics_received: 0,
     created_at: now,
     updated_at: now,
   };
 
-  await db.insert(contestants).values(newContestant);
+  await db.insert(currentContestants).values(newContestant);
   return await getContestantById(contestantId) as Contestant;
 }
 
 export async function updateContestant(id: string, data: Partial<ContestantFormData>): Promise<Contestant> {
   const now = new Date().toISOString();
   
-  await db.update(contestants)
+  await db.update(currentContestants)
     .set({
       ...data,
       updated_at: now,
     })
-    .where(eq(contestants.id, id));
+    .where(eq(currentContestants.id, id));
 
   return await getContestantById(id) as Contestant;
 }
 
 export async function deleteContestant(id: string): Promise<void> {
-  // Delete related scores and episodes first
-  await db.delete(contestant_scores).where(eq(contestant_scores.contestant_id, id));
-  await db.delete(contestant_episodes).where(eq(contestant_episodes.contestant_id, id));
-  await db.delete(contestants).where(eq(contestants.id, id));
+  // Delete related scores and currentEpisodes first
+  await db.delete(currentContestantScores).where(eq(currentContestantScores.contestant_id, id));
+  await db.delete(currentContestantEpisodes).where(eq(currentContestantEpisodes.contestant_id, id));
+  await db.delete(currentContestants).where(eq(currentContestants.id, id));
 }
 
 // Search and filter operations
 export async function searchContestants(query: string): Promise<Contestant[]> {
   const searchTerm = `%${query}%`;
   return await db.select()
-    .from(contestants)
+    .from(currentContestants)
     .where(
       or(
-        like(contestants.name, searchTerm),
-        like(contestants.city, searchTerm),
-        like(contestants.audition_city, searchTerm),
-        like(contestants.bio, searchTerm)
+        like(currentContestants.name, searchTerm),
+        like(currentContestants.city, searchTerm),
+        like(currentContestants.audition_city, searchTerm),
+        like(currentContestants.bio, searchTerm)
       )
     )
-    .orderBy(asc(contestants.name));
+    .orderBy(asc(currentContestants.name));
 }
 
 export async function getContestantsByCity(city: string): Promise<Contestant[]> {
   return await db.select()
-    .from(contestants)
-    .where(eq(contestants.city, city))
-    .orderBy(asc(contestants.name));
+    .from(currentContestants)
+    .where(eq(currentContestants.city, city))
+    .orderBy(asc(currentContestants.name));
 }
 
 export async function getContestantsByStatus(status: 'Competing' | 'Eliminated' | 'Winner' | 'Runner-up'): Promise<Contestant[]> {
   return await db.select()
-    .from(contestants)
-    .where(eq(contestants.status, status))
-    .orderBy(asc(contestants.name));
+    .from(currentContestants)
+    .where(eq(currentContestants.status, status))
+    .orderBy(asc(currentContestants.name));
 }
 
 export async function getContestantsByAuditionCity(auditionCity: string): Promise<Contestant[]> {
   return await db.select()
-    .from(contestants)
-    .where(eq(contestants.audition_city, auditionCity))
-    .orderBy(asc(contestants.name));
+    .from(currentContestants)
+    .where(eq(currentContestants.audition_city, auditionCity))
+    .orderBy(asc(currentContestants.name));
 }
 
 // Score operations
@@ -134,7 +143,7 @@ export async function addContestantScore(
     created_at: now,
   };
 
-  await db.insert(contestant_scores).values(newScore);
+  await db.insert(currentContestantScores).values(newScore);
   
   // Update contestant's total and average scores
   await updateContestantScores(contestantId);
@@ -144,21 +153,21 @@ export async function addContestantScore(
 
 export async function getContestantScores(contestantId: string): Promise<ContestantScore[]> {
   return await db.select()
-    .from(contestant_scores)
-    .where(eq(contestant_scores.contestant_id, contestantId))
-    .orderBy(desc(contestant_scores.created_at));
+    .from(currentContestantScores)
+    .where(eq(currentContestantScores.contestant_id, contestantId))
+    .orderBy(desc(currentContestantScores.created_at));
 }
 
 export async function getContestantScoresByEpisode(contestantId: string, episodeId: string): Promise<ContestantScore[]> {
   return await db.select()
-    .from(contestant_scores)
+    .from(currentContestantScores)
     .where(
       and(
-        eq(contestant_scores.contestant_id, contestantId),
-        eq(contestant_scores.episode_id, episodeId)
+        eq(currentContestantScores.contestant_id, contestantId),
+        eq(currentContestantScores.episode_id, episodeId)
       )
     )
-    .orderBy(asc(contestant_scores.judge_name));
+    .orderBy(asc(currentContestantScores.judge_name));
 }
 
 async function updateContestantScores(contestantId: string): Promise<void> {
@@ -166,14 +175,14 @@ async function updateContestantScores(contestantId: string): Promise<void> {
   const totalScore = scores.reduce((sum, score) => sum + score.score, 0);
   const averageScore = scores.length > 0 ? totalScore / scores.length : 0;
   
-  await db.update(contestants)
+  await db.update(currentContestants)
     .set({
       total_score: totalScore,
       average_score: averageScore,
-      episodes_participated: scores.length,
+      currentEpisodes_participated: scores.length,
       updated_at: new Date().toISOString(),
     })
-    .where(eq(contestants.id, contestantId));
+    .where(eq(currentContestants.id, contestantId));
 }
 
 // Episode participation operations
@@ -197,22 +206,22 @@ export async function addContestantToEpisode(
     created_at: now,
   };
 
-  await db.insert(contestant_episodes).values(newContestantEpisode);
+  await db.insert(currentContestantEpisodes).values(newContestantEpisode);
   return newContestantEpisode;
 }
 
 export async function getContestantEpisodes(contestantId: string): Promise<ContestantEpisode[]> {
   return await db.select()
-    .from(contestant_episodes)
-    .where(eq(contestant_episodes.contestant_id, contestantId))
-    .orderBy(asc(contestant_episodes.performance_order));
+    .from(currentContestantEpisodes)
+    .where(eq(currentContestantEpisodes.contestant_id, contestantId))
+    .orderBy(asc(currentContestantEpisodes.performance_order));
 }
 
 export async function getEpisodeContestants(episodeId: string): Promise<ContestantEpisode[]> {
   return await db.select()
-    .from(contestant_episodes)
-    .where(eq(contestant_episodes.episode_id, episodeId))
-    .orderBy(asc(contestant_episodes.performance_order));
+    .from(currentContestantEpisodes)
+    .where(eq(currentContestantEpisodes.episode_id, episodeId))
+    .orderBy(asc(currentContestantEpisodes.performance_order));
 }
 
 // Statistics operations
@@ -245,27 +254,27 @@ export async function getContestantStats(): Promise<{
 }
 
 export async function getRecentlyEliminated(): Promise<Contestant[]> {
-  // Get contestants eliminated in the last 7 days
+  // Get currentContestants eliminated in the last 7 days
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   
   return await db.select()
-    .from(contestants)
+    .from(currentContestants)
     .where(
       and(
-        eq(contestants.status, 'Eliminated'),
-        gte(contestants.updated_at, sevenDaysAgo.toISOString())
+        eq(currentContestants.status, 'Eliminated'),
+        gte(currentContestants.updated_at, sevenDaysAgo.toISOString())
       )
     )
-    .orderBy(desc(contestants.updated_at))
+    .orderBy(desc(currentContestants.updated_at))
     .limit(5);
 }
 
 export async function getTopPerformers(): Promise<Contestant[]> {
   return await db.select()
-    .from(contestants)
-    .where(eq(contestants.status, 'Competing'))
-    .orderBy(desc(contestants.average_score))
+    .from(currentContestants)
+    .where(eq(currentContestants.status, 'Competing'))
+    .orderBy(desc(currentContestants.average_score))
     .limit(5);
 }
 
@@ -288,7 +297,7 @@ export async function getContestantProgress(): Promise<{
     ? competing.reduce((sum, c) => sum + (c.average_score || 0), 0) / competing.length 
     : 0;
   
-  // Find top city by number of competing contestants
+  // Find top city by number of competing currentContestants
   const cityCounts = competing.reduce((acc, c) => {
     acc[c.city] = (acc[c.city] || 0) + 1;
     return acc;

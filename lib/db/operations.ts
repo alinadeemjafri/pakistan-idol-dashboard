@@ -1,15 +1,22 @@
-import { db, episodes, users } from '@/lib/db';
+import { db } from '@/lib/db';
+import { currentEpisodes, currentUsers } from '@/lib/db/schema';
+import { currentEpisodes as pgEpisodes, currentUsers as pgUsers } from '@/lib/db/schema-postgres';
+
+// Use the correct schema based on environment
+const isProduction = process.env.NODE_ENV === 'production' && (process.env.DATABASE_URL || process.env.DB_POSTGRES_URL);
+const currentEpisodes = isProduction ? pgEpisodes : currentEpisodes;
+const currentUsers = isProduction ? pgUsers : currentUsers;
 import { eq, desc, asc, and, gte, lte, like, or } from 'drizzle-orm';
 import { Episode, NewEpisode, User, NewUser, EpisodeFormData } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 
 // Episode operations
 export async function getAllEpisodes(): Promise<Episode[]> {
-  return await db.select().from(episodes).orderBy(asc(episodes.episode_no));
+  return await db.select().from(currentEpisodes).orderBy(asc(currentEpisodes.episode_no));
 }
 
 export async function getEpisodeById(id: string): Promise<Episode | null> {
-  const result = await db.select().from(episodes).where(eq(episodes.episode_id, id)).limit(1);
+  const result = await db.select().from(currentEpisodes).where(eq(currentEpisodes.episode_id, id)).limit(1);
   return result[0] || null;
 }
 
@@ -40,68 +47,68 @@ export async function createEpisode(data: EpisodeFormData, updatedBy: string): P
     updated_at: now,
   };
 
-  await db.insert(episodes).values(newEpisode);
+  await db.insert(currentEpisodes).values(newEpisode);
   return await getEpisodeById(episodeId) as Episode;
 }
 
 export async function updateEpisode(id: string, data: Partial<EpisodeFormData>, updatedBy: string): Promise<Episode> {
   const now = new Date().toISOString();
   
-  await db.update(episodes)
+  await db.update(currentEpisodes)
     .set({
       ...data,
       updated_by: updatedBy,
       updated_at: now,
     })
-    .where(eq(episodes.episode_id, id));
+    .where(eq(currentEpisodes.episode_id, id));
 
   return await getEpisodeById(id) as Episode;
 }
 
 export async function deleteEpisode(id: string): Promise<void> {
-  await db.delete(episodes).where(eq(episodes.episode_id, id));
+  await db.delete(currentEpisodes).where(eq(currentEpisodes.episode_id, id));
 }
 
 // Search and filter operations
 export async function searchEpisodes(query: string): Promise<Episode[]> {
   const searchTerm = `%${query}%`;
   return await db.select()
-    .from(episodes)
+    .from(currentEpisodes)
     .where(
       or(
-        like(episodes.phase, searchTerm),
-        like(episodes.city, searchTerm),
-        like(episodes.format_summary, searchTerm),
-        like(episodes.notes, searchTerm)
+        like(currentEpisodes.phase, searchTerm),
+        like(currentEpisodes.city, searchTerm),
+        like(currentEpisodes.format_summary, searchTerm),
+        like(currentEpisodes.notes, searchTerm)
       )
     )
-    .orderBy(asc(episodes.episode_no));
+    .orderBy(asc(currentEpisodes.episode_no));
 }
 
 export async function getEpisodesByCity(city: string): Promise<Episode[]> {
   return await db.select()
-    .from(episodes)
-    .where(eq(episodes.city, city))
-    .orderBy(asc(episodes.episode_no));
+    .from(currentEpisodes)
+    .where(eq(currentEpisodes.city, city))
+    .orderBy(asc(currentEpisodes.episode_no));
 }
 
 export async function getEpisodesByPhase(phase: string): Promise<Episode[]> {
   return await db.select()
-    .from(episodes)
-    .where(eq(episodes.phase, phase))
-    .orderBy(asc(episodes.episode_no));
+    .from(currentEpisodes)
+    .where(eq(currentEpisodes.phase, phase))
+    .orderBy(asc(currentEpisodes.episode_no));
 }
 
 export async function getEpisodesByDateRange(startDate: string, endDate: string): Promise<Episode[]> {
   return await db.select()
-    .from(episodes)
+    .from(currentEpisodes)
     .where(
       and(
-        gte(episodes.record_start, startDate),
-        lte(episodes.record_start, endDate)
+        gte(currentEpisodes.record_start, startDate),
+        lte(currentEpisodes.record_start, endDate)
       )
     )
-    .orderBy(asc(episodes.record_start));
+    .orderBy(asc(currentEpisodes.record_start));
 }
 
 export async function getTodayEpisodes(): Promise<Episode[]> {
@@ -110,29 +117,29 @@ export async function getTodayEpisodes(): Promise<Episode[]> {
   const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1).toISOString();
   
   return await db.select()
-    .from(episodes)
+    .from(currentEpisodes)
     .where(
       or(
         and(
-          gte(episodes.record_start, startOfDay),
-          lte(episodes.record_start, endOfDay)
+          gte(currentEpisodes.record_start, startOfDay),
+          lte(currentEpisodes.record_start, endOfDay)
         ),
         and(
-          gte(episodes.air_start, startOfDay),
-          lte(episodes.air_start, endOfDay)
+          gte(currentEpisodes.air_start, startOfDay),
+          lte(currentEpisodes.air_start, endOfDay)
         )
       )
     )
-    .orderBy(asc(episodes.record_start));
+    .orderBy(asc(currentEpisodes.record_start));
 }
 
 export async function getNextRecording(): Promise<Episode | null> {
   const now = new Date().toISOString();
   
   const result = await db.select()
-    .from(episodes)
-    .where(gte(episodes.record_start, now))
-    .orderBy(asc(episodes.record_start))
+    .from(currentEpisodes)
+    .where(gte(currentEpisodes.record_start, now))
+    .orderBy(asc(currentEpisodes.record_start))
     .limit(1);
     
   return result[0] || null;
@@ -142,9 +149,9 @@ export async function getNextAiring(): Promise<Episode | null> {
   const now = new Date().toISOString();
   
   const result = await db.select()
-    .from(episodes)
-    .where(gte(episodes.air_start, now))
-    .orderBy(asc(episodes.air_start))
+    .from(currentEpisodes)
+    .where(gte(currentEpisodes.air_start, now))
+    .orderBy(asc(currentEpisodes.air_start))
     .limit(1);
     
   return result[0] || null;
@@ -154,42 +161,42 @@ export async function getCurrentlyRecording(): Promise<Episode[]> {
   const now = new Date().toISOString();
   
   return await db.select()
-    .from(episodes)
+    .from(currentEpisodes)
     .where(
       and(
-        lte(episodes.record_start, now),
-        gte(episodes.record_end, now)
+        lte(currentEpisodes.record_start, now),
+        gte(currentEpisodes.record_end, now)
       )
     )
-    .orderBy(asc(episodes.record_start));
+    .orderBy(asc(currentEpisodes.record_start));
 }
 
 export async function getCurrentlyAiring(): Promise<Episode[]> {
   const now = new Date().toISOString();
   
   return await db.select()
-    .from(episodes)
+    .from(currentEpisodes)
     .where(
       and(
-        lte(episodes.air_start, now),
-        gte(episodes.air_end, now)
+        lte(currentEpisodes.air_start, now),
+        gte(currentEpisodes.air_end, now)
       )
     )
-    .orderBy(asc(episodes.air_start));
+    .orderBy(asc(currentEpisodes.air_start));
 }
 
 // User operations
 export async function getAllUsers(): Promise<User[]> {
-  return await db.select().from(users).orderBy(asc(users.name));
+  return await db.select().from(currentUsers).orderBy(asc(currentUsers.name));
 }
 
 export async function getUserById(id: string): Promise<User | null> {
-  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  const result = await db.select().from(currentUsers).where(eq(currentUsers.id, id)).limit(1);
   return result[0] || null;
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  const result = await db.select().from(currentUsers).where(eq(currentUsers.email, email)).limit(1);
   return result[0] || null;
 }
 
@@ -205,18 +212,18 @@ export async function createUser(data: { email: string; name: string; role: 'Edi
     created_at: now,
   };
 
-  await db.insert(users).values(newUser);
+  await db.insert(currentUsers).values(newUser);
   return await getUserById(userId) as User;
 }
 
 export async function updateUserRole(id: string, role: 'Editor' | 'Viewer'): Promise<User> {
-  await db.update(users)
+  await db.update(currentUsers)
     .set({ role })
-    .where(eq(users.id, id));
+    .where(eq(currentUsers.id, id));
 
   return await getUserById(id) as User;
 }
 
 export async function deleteUser(id: string): Promise<void> {
-  await db.delete(users).where(eq(users.id, id));
+  await db.delete(currentUsers).where(eq(currentUsers.id, id));
 }

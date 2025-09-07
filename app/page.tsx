@@ -61,55 +61,17 @@ export default async function HomePage() {
   const now = new Date();
   const nextWeek = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
   
-  // Debug logging
-  console.log('Debug - Current time:', now.toISOString());
-  console.log('Debug - Next week:', nextWeek.toISOString());
-  console.log('Debug - Total episodes fetched:', upcomingEpisodes.length);
-  console.log('Debug - First few episodes:', upcomingEpisodes.slice(0, 3).map(ep => ({
-    episode_no: ep.episode_no,
-    air_start: ep.air_start,
-    airDate: new Date(ep.air_start).toISOString()
-  })));
-  
   const timelineEpisodes = upcomingEpisodes
     .filter(episode => {
       const airDate = new Date(episode.air_start);
-      const isInRange = airDate >= now && airDate <= nextWeek;
-      console.log(`Debug - Episode ${episode.episode_no}: ${episode.air_start} -> ${airDate.toISOString()} -> ${isInRange}`);
-      return isInRange;
+      return airDate >= now && airDate <= nextWeek;
     })
     .sort((a, b) => new Date(a.air_start).getTime() - new Date(b.air_start).getTime())
     .slice(0, 5);
-    
-  console.log('Debug - Timeline episodes found:', timelineEpisodes.length);
 
   return (
     <Layout user={user}>
       <div className="space-y-6">
-        {/* Debug Information */}
-        <Card className="border border-red-200 bg-red-50">
-          <CardHeader>
-            <CardTitle className="text-red-800">Debug Information</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-red-700">
-            <p>Current time: {now.toISOString()}</p>
-            <p>Next week: {nextWeek.toISOString()}</p>
-            <p>Total episodes fetched: {upcomingEpisodes.length}</p>
-            <p>Timeline episodes found: {timelineEpisodes.length}</p>
-            {upcomingEpisodes.length > 0 && (
-              <div>
-                <p>First few episodes:</p>
-                <ul className="ml-4">
-                  {upcomingEpisodes.slice(0, 3).map(ep => (
-                    <li key={ep.episode_id}>
-                      Episode {ep.episode_no}: {ep.air_start} (parsed: {new Date(ep.air_start).toISOString()})
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </CardContent>
-        </Card>
         {/* Header */}
         <div className="text-center">
           <div className="inline-flex items-center space-x-4 mb-6">
