@@ -16,7 +16,8 @@ export default async function AiringSchedulePage() {
   const airingEpisodes = episodes
     .filter(episode => {
       const status = getEpisodeStatus(episode);
-      return status !== 'Planned' && status !== 'Recording';
+      // Show episodes that are recorded, airing, or aired (exclude only planned and recording)
+      return status !== 'Recording';
     })
     .sort((a, b) => new Date(a.air_start).getTime() - new Date(b.air_start).getTime());
 
