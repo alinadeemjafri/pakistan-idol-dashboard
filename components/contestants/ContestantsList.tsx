@@ -8,7 +8,6 @@ import { ContestantCard } from '@/components/contestants/ContestantCard';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Search, Users, X } from 'lucide-react';
 import { Contestant } from '@/lib/types';
-import Link from 'next/link';
 
 interface ContestantsListProps {
   contestants: Contestant[];
@@ -118,8 +117,7 @@ export function ContestantsList({ contestants, cities }: ContestantsListProps) {
           {/* Mobile Compact List View */}
           <div className="md:hidden space-y-2">
             {filteredContestants.map((contestant) => (
-              <Link key={contestant.id} href={`/contestants/${contestant.id}`}>
-                <div className="bg-white border border-slate-200 rounded-lg p-3 hover:bg-slate-50 transition-colors">
+              <div key={contestant.id} className="bg-white border border-slate-200 rounded-lg p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
@@ -142,7 +140,6 @@ export function ContestantsList({ contestants, cities }: ContestantsListProps) {
                     </div>
                   </div>
                 </div>
-              </Link>
             ))}
           </div>
 

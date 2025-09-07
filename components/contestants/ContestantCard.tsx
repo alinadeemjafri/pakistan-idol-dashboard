@@ -3,7 +3,6 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Contestant } from '@/lib/types';
 import { MapPin, Phone, Hash } from 'lucide-react';
-import Link from 'next/link';
 
 interface ContestantCardProps {
   contestant: Contestant;
@@ -11,18 +10,17 @@ interface ContestantCardProps {
 
 export function ContestantCard({ contestant }: ContestantCardProps) {
   return (
-    <Link href={`/contestants/${contestant.id}`}>
-      <Card className="hover:shadow-xl transition-all duration-200 cursor-pointer border border-slate-200 bg-white shadow-sm group">
+    <Card className="border border-slate-200 bg-white shadow-sm">
         <CardContent className="p-6">
           <div className="flex items-start space-x-4">
             {/* Serial Number */}
-            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:scale-105 transition-transform duration-200">
+            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md">
               {contestant.serial_number}
             </div>
             
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-semibold text-slate-900 truncate group-hover:text-primary transition-colors">
+                <h3 className="text-lg font-semibold text-slate-900 truncate">
                   {contestant.name}
                 </h3>
                 <StatusBadge status={contestant.status} />
@@ -54,6 +52,5 @@ export function ContestantCard({ contestant }: ContestantCardProps) {
           </div>
         </CardContent>
       </Card>
-    </Link>
   );
 }
