@@ -86,6 +86,30 @@ export default async function HomePage() {
   return (
     <Layout user={user}>
       <div className="space-y-6">
+        {/* Debug Information */}
+        <Card className="border border-red-200 bg-red-50">
+          <CardHeader>
+            <CardTitle className="text-red-800">Debug Information</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-red-700">
+            <p>Current time: {now.toISOString()}</p>
+            <p>Next week: {nextWeek.toISOString()}</p>
+            <p>Total episodes fetched: {upcomingEpisodes.length}</p>
+            <p>Timeline episodes found: {timelineEpisodes.length}</p>
+            {upcomingEpisodes.length > 0 && (
+              <div>
+                <p>First few episodes:</p>
+                <ul className="ml-4">
+                  {upcomingEpisodes.slice(0, 3).map(ep => (
+                    <li key={ep.episode_id}>
+                      Episode {ep.episode_no}: {ep.air_start} (parsed: {new Date(ep.air_start).toISOString()})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
         {/* Header */}
         <div className="text-center">
           <div className="inline-flex items-center space-x-4 mb-6">
