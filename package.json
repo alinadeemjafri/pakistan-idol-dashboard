@@ -12,12 +12,15 @@
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.24",
+    "@ai-sdk/react": "^2.0.34",
     "@hookform/resolvers": "^3.3.2",
     "@types/better-sqlite3": "^7.6.8",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^9.0.7",
+    "ai": "^5.0.34",
     "autoprefixer": "^10.0.1",
     "better-sqlite3": "^9.2.2",
     "clsx": "^2.0.0",

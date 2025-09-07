@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from './Header';
 import { AuthUser } from '@/lib/auth';
+import AIChatbot from '@/components/ai/AIChatbot';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ export function Layout({ children, user = null }: LayoutProps) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
       </main>
+      <AIChatbot />
     </div>
   );
 }
