@@ -32,23 +32,21 @@ export default async function HomePage() {
   let contestantProgress: any = {};
   let upcomingEpisodes: any[] = [];
 
-  // Fetch episodes the same way as other pages
+  // Fetch episodes and next recording/airing the same way as other pages
   upcomingEpisodes = await getAllEpisodes();
+  nextRecording = await getNextRecording();
+  nextAiring = await getNextAiring();
   
   // Fetch other data with error handling
   try {
     [
       todayEpisodes,
-      nextRecording,
-      nextAiring,
       contestantStats,
       recentlyEliminated,
       topPerformers,
       contestantProgress
     ] = await Promise.all([
       getTodayEpisodes(),
-      getNextRecording(),
-      getNextAiring(),
       getContestantStats(),
       getRecentlyEliminated(),
       getTopPerformers(),
