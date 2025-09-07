@@ -61,13 +61,27 @@ export default async function HomePage() {
   const now = new Date();
   const nextWeek = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
   
+  // Debug logging
+  console.log('Debug - Current time:', now.toISOString());
+  console.log('Debug - Next week:', nextWeek.toISOString());
+  console.log('Debug - Total episodes fetched:', upcomingEpisodes.length);
+  console.log('Debug - First few episodes:', upcomingEpisodes.slice(0, 3).map(ep => ({
+    episode_no: ep.episode_no,
+    air_start: ep.air_start,
+    airDate: new Date(ep.air_start).toISOString()
+  })));
+  
   const timelineEpisodes = upcomingEpisodes
     .filter(episode => {
       const airDate = new Date(episode.air_start);
-      return airDate >= now && airDate <= nextWeek;
+      const isInRange = airDate >= now && airDate <= nextWeek;
+      console.log(`Debug - Episode ${episode.episode_no}: ${episode.air_start} -> ${airDate.toISOString()} -> ${isInRange}`);
+      return isInRange;
     })
     .sort((a, b) => new Date(a.air_start).getTime() - new Date(b.air_start).getTime())
     .slice(0, 5);
+    
+  console.log('Debug - Timeline episodes found:', timelineEpisodes.length);
 
   return (
     <Layout user={user}>
