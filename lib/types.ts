@@ -81,25 +81,15 @@ export interface ExcelMapping {
   notes: string;
 }
 
-export type ContestantStatus = 'Competing' | 'Eliminated' | 'Winner' | 'Runner-up';
+export type ContestantStatus = 'Competing' | 'Eliminated';
 
 export interface Contestant {
   id: string;
+  serial_number: number;
   name: string;
-  age: number;
+  contact: string;
   city: string;
-  phone: string | null;
-  email: string | null;
-  profile_image: string | null;
-  bio: string | null;
-  audition_date: string | null;
-  audition_city: string;
-  audition_venue: string | null;
   status: ContestantStatus;
-  total_score: number | null;
-  average_score: number | null;
-  episodes_participated: number | null;
-  golden_mics_received: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -125,16 +115,10 @@ export interface ContestantEpisode {
 }
 
 export interface ContestantFormData {
+  serial_number: number;
   name: string;
-  age: number;
+  contact: string;
   city: string;
-  phone?: string;
-  email?: string;
-  profile_image?: string;
-  bio?: string;
-  audition_date?: string;
-  audition_city: string;
-  audition_venue?: string;
   status: ContestantStatus;
 }
 

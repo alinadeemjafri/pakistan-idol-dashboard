@@ -12,17 +12,15 @@ export default async function ContestantsPage() {
   const user = await getCurrentUser();
   
   let contestants: any[] = [];
-  let stats: any = { total: 0, competing: 0, eliminated: 0, winners: 0, byCity: {}, byAuditionCity: {} };
+  let stats: any = { total: 0, competing: 0, eliminated: 0, byCity: {} };
   let cities: string[] = [];
-  let auditionCities: string[] = [];
 
   try {
     contestants = await getAllContestants();
     stats = await getContestantStats();
     
-    // Get unique cities and audition cities for filters
+    // Get unique cities for filters
     cities = [...new Set(contestants.map(c => c.city))].sort();
-    auditionCities = [...new Set(contestants.map(c => c.audition_city))].sort();
   } catch (error) {
     console.error('Error loading contestants:', error);
     // If there's an error, show empty state
@@ -48,7 +46,7 @@ export default async function ContestantsPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
@@ -80,12 +78,12 @@ export default async function ContestantsPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-warning/10 rounded-lg">
-                  <Trophy className="w-6 h-6 text-warning" />
+                <div className="p-2 bg-danger/10 rounded-lg">
+                  <Trophy className="w-6 h-6 text-danger" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">Winners</p>
-                  <p className="text-2xl font-bold text-slate-900">{stats.winners}</p>
+                  <p className="text-sm text-slate-600">Eliminated</p>
+                  <p className="text-2xl font-bold text-slate-900">{stats.eliminated}</p>
                 </div>
               </div>
             </CardContent>
@@ -110,7 +108,6 @@ export default async function ContestantsPage() {
         <ContestantsList 
           contestants={contestants} 
           cities={cities} 
-          auditionCities={auditionCities} 
         />
 
         {contestants.length === 0 && (

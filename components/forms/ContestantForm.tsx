@@ -17,16 +17,10 @@ export function ContestantForm({ contestant }: ContestantFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<ContestantFormData>({
+    serial_number: contestant?.serial_number || 1,
     name: contestant?.name || '',
-    age: contestant?.age || 18,
+    contact: contestant?.contact || '',
     city: contestant?.city || '',
-    phone: contestant?.phone || '',
-    email: contestant?.email || '',
-    profile_image: contestant?.profile_image || '',
-    bio: contestant?.bio || '',
-    audition_date: contestant?.audition_date ? new Date(contestant.audition_date).toISOString().slice(0, 16) : '',
-    audition_city: contestant?.audition_city || '',
-    audition_venue: contestant?.audition_venue || '',
     status: contestant?.status || 'Competing',
   });
 
@@ -70,13 +64,21 @@ export function ContestantForm({ contestant }: ContestantFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Basic Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>Contestant Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Serial Number"
+              type="number"
+              min="1"
+              value={formData.serial_number}
+              onChange={(e) => handleInputChange('serial_number', parseInt(e.target.value))}
+              required
+            />
+            
             <Input
               label="Full Name"
               value={formData.name}
@@ -85,12 +87,10 @@ export function ContestantForm({ contestant }: ContestantFormProps) {
             />
             
             <Input
-              label="Age"
-              type="number"
-              min="16"
-              max="50"
-              value={formData.age}
-              onChange={(e) => handleInputChange('age', parseInt(e.target.value))}
+              label="Contact"
+              value={formData.contact}
+              onChange={(e) => handleInputChange('contact', e.target.value)}
+              placeholder="Phone number or email"
               required
             />
             
@@ -112,97 +112,10 @@ export function ContestantForm({ contestant }: ContestantFormProps) {
               options={[
                 { value: 'Competing', label: 'Competing' },
                 { value: 'Eliminated', label: 'Eliminated' },
-                { value: 'Winner', label: 'Winner' },
-                { value: 'Runner-up', label: 'Runner-up' },
               ]}
               required
             />
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Contact Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Contact Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="Phone Number"
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
-              placeholder="+92-300-1234567"
-            />
-            
-            <Input
-              label="Email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              placeholder="contestant@email.com"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Audition Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Audition Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="Audition Date"
-              type="datetime-local"
-              value={formData.audition_date}
-              onChange={(e) => handleInputChange('audition_date', e.target.value)}
-            />
-            
-            <Select
-              label="Audition City"
-              value={formData.audition_city}
-              onChange={(e) => handleInputChange('audition_city', e.target.value)}
-              options={[
-                { value: '', label: 'Select Audition City' },
-                ...cities.map(city => ({ value: city, label: city }))
-              ]}
-              required
-            />
-          </div>
-          
-          <Input
-            label="Audition Venue"
-            value={formData.audition_venue}
-            onChange={(e) => handleInputChange('audition_venue', e.target.value)}
-            placeholder="e.g., Karachi Arts Council"
-          />
-        </CardContent>
-      </Card>
-
-      {/* Additional Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Additional Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Input
-            label="Profile Image URL"
-            type="url"
-            value={formData.profile_image}
-            onChange={(e) => handleInputChange('profile_image', e.target.value)}
-            placeholder="https://example.com/profile.jpg"
-          />
-          
-          <Textarea
-            label="Bio"
-            value={formData.bio}
-            onChange={(e) => handleInputChange('bio', e.target.value)}
-            rows={4}
-            placeholder="Tell us about the contestant's musical background, experience, and style..."
-          />
         </CardContent>
       </Card>
 

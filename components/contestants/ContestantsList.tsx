@@ -13,35 +13,31 @@ import Link from 'next/link';
 interface ContestantsListProps {
   contestants: Contestant[];
   cities: string[];
-  auditionCities: string[];
 }
 
-export function ContestantsList({ contestants, cities, auditionCities }: ContestantsListProps) {
+export function ContestantsList({ contestants, cities }: ContestantsListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
-  const [selectedAuditionCity, setSelectedAuditionCity] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
 
   const filteredContestants = useMemo(() => {
     return contestants.filter(contestant => {
       const matchesSearch = contestant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            contestant.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           contestant.audition_city.toLowerCase().includes(searchTerm.toLowerCase());
+                           contestant.contact.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesCity = !selectedCity || contestant.city === selectedCity;
-      const matchesAuditionCity = !selectedAuditionCity || contestant.audition_city === selectedAuditionCity;
       const matchesStatus = !selectedStatus || contestant.status === selectedStatus;
 
-      return matchesSearch && matchesCity && matchesAuditionCity && matchesStatus;
+      return matchesSearch && matchesCity && matchesStatus;
     });
-  }, [contestants, searchTerm, selectedCity, selectedAuditionCity, selectedStatus]);
+  }, [contestants, searchTerm, selectedCity, selectedStatus]);
 
-  const hasActiveFilters = searchTerm || selectedCity || selectedAuditionCity || selectedStatus;
+  const hasActiveFilters = searchTerm || selectedCity || selectedStatus;
 
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedCity('');
-    setSelectedAuditionCity('');
     setSelectedStatus('');
   };
 
@@ -72,12 +68,12 @@ export function ContestantsList({ contestants, cities, auditionCities }: Contest
             </div>
             
             {/* Search and Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Search Input - NO duplicate icon */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <Input
-                  placeholder="Search by name, city..."
+                  placeholder="Search by name, city, contact..."
                   className="pl-10 border-slate-200 focus:border-secondary focus:ring-secondary/20"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -95,25 +91,13 @@ export function ContestantsList({ contestants, cities, auditionCities }: Contest
               />
               
               <Select
-                label="Audition City"
-                value={selectedAuditionCity}
-                onChange={(e) => setSelectedAuditionCity(e.target.value)}
-                options={[
-                  { value: '', label: 'All Audition Cities' },
-                  ...auditionCities.map(city => ({ value: city, label: city }))
-                ]}
-              />
-              
-              <Select
                 label="Status"
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
                 options={[
                   { value: '', label: 'All Statuses' },
                   { value: 'Competing', label: 'Competing' },
-                  { value: 'Eliminated', label: 'Eliminated' },
-                  { value: 'Winner', label: 'Winner' },
-                  { value: 'Runner-up', label: 'Runner-up' }
+                  { value: 'Eliminated', label: 'Eliminated' }
                 ]}
               />
             </div>
@@ -139,7 +123,7 @@ export function ContestantsList({ contestants, cities, auditionCities }: Contest
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        {contestant.name.split(' ').map(n => n[0]).join('')}
+                        {contestant.serial_number}
                       </div>
                       <div>
                         <div className="flex items-center space-x-2">
@@ -147,16 +131,13 @@ export function ContestantsList({ contestants, cities, auditionCities }: Contest
                           <StatusBadge status={contestant.status} />
                         </div>
                         <div className="text-xs text-slate-600 mt-1">
-                          {contestant.city} • {contestant.age} years
+                          {contestant.city} • {contestant.contact}
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xs font-semibold text-warning">
-                        {contestant.average_score?.toFixed(1) || '0.0'}
-                      </div>
                       <div className="text-xs text-slate-500">
-                        {contestant.episodes_participated} eps
+                        #{contestant.serial_number}
                       </div>
                     </div>
                   </div>

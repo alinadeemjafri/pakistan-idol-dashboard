@@ -318,8 +318,8 @@ export default async function HomePage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-warning">{contestant.average_score?.toFixed(1) || '0.0'}</p>
-                        <p className="text-xs text-slate-500">avg</p>
+                        <p className="font-semibold text-warning">#{contestant.serial_number}</p>
+                        <p className="text-xs text-slate-500">serial</p>
                       </div>
                     </div>
                   ))
@@ -349,7 +349,7 @@ export default async function HomePage() {
                   recentlyEliminated.map((contestant) => (
                     <div key={contestant.id} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
                       <div className="w-10 h-10 bg-danger rounded-full flex items-center justify-center text-white font-bold">
-                        {contestant.name.split(' ').map((n: any) => n[0]).join('')}
+                        {contestant.serial_number}
                       </div>
                       <div className="flex-1">
                         <p className="font-medium text-slate-900">{contestant.name}</p>

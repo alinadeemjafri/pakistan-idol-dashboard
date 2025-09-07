@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Contestant } from '@/lib/types';
-import { MapPin, Calendar, Star, Mic } from 'lucide-react';
+import { MapPin, Phone, Hash } from 'lucide-react';
 import Link from 'next/link';
 
 interface ContestantCardProps {
@@ -15,9 +15,9 @@ export function ContestantCard({ contestant }: ContestantCardProps) {
       <Card className="hover:shadow-xl transition-all duration-200 cursor-pointer border border-slate-200 bg-white shadow-sm group">
         <CardContent className="p-6">
           <div className="flex items-start space-x-4">
-            {/* Profile Image Placeholder */}
+            {/* Serial Number */}
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:scale-105 transition-transform duration-200">
-              {contestant.name.split(' ').map(n => n[0]).join('')}
+              {contestant.serial_number}
             </div>
             
             <div className="flex-1 min-w-0">
@@ -34,39 +34,22 @@ export function ContestantCard({ contestant }: ContestantCardProps) {
                     <MapPin className="w-3 h-3 text-primary" />
                   </div>
                   <span className="font-medium">{contestant.city}</span>
-                  <span className="text-slate-400">•</span>
-                  <span>{contestant.age} years old</span>
                 </div>
                 
                 <div className="flex items-center space-x-2 text-slate-600">
                   <div className="w-5 h-5 bg-secondary/10 rounded-full flex items-center justify-center">
-                    <Calendar className="w-3 h-3 text-secondary" />
+                    <Phone className="w-3 h-3 text-secondary" />
                   </div>
-                  <span>Auditioned in {contestant.audition_city}</span>
+                  <span>{contestant.contact}</span>
                 </div>
                 
-                <div className="flex items-center space-x-6 mt-3">
-                  <div className="flex items-center space-x-2 bg-warning/10 rounded-lg px-3 py-1">
-                    <Star className="w-4 h-4 text-warning" />
-                    <span className="font-semibold text-slate-700">{contestant.average_score?.toFixed(1) || '0.0'}</span>
-                    <span className="text-slate-500 text-xs">avg</span>
+                <div className="flex items-center space-x-2 text-slate-600 mt-3">
+                  <div className="w-5 h-5 bg-accent/10 rounded-full flex items-center justify-center">
+                    <Hash className="w-3 h-3 text-accent" />
                   </div>
-                  
-                  <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-1">
-                    <Mic className="w-4 h-4 text-primary" />
-                    <span className="font-semibold text-slate-700">{contestant.episodes_participated}</span>
-                    <span className="text-slate-500 text-xs">episodes</span>
-                  </div>
+                  <span className="font-semibold text-slate-700">Serial #{contestant.serial_number}</span>
                 </div>
               </div>
-              
-              {contestant.bio && (
-                <div className="mt-3 p-3 bg-slate-50 rounded-lg border-l-4 border-accent">
-                  <p className="text-sm text-slate-600 line-clamp-2">
-                    {contestant.bio}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </CardContent>
