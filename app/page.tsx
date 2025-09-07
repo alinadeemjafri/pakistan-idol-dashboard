@@ -32,12 +32,10 @@ export default async function HomePage() {
   let contestantProgress: any = {};
   let upcomingEpisodes: any[] = [];
 
+  // Fetch episodes the same way as other pages
+  upcomingEpisodes = await getAllEpisodes();
+  
   try {
-    // Fetch episodes separately first to debug
-    console.log('Debug - About to call getAllEpisodes()');
-    upcomingEpisodes = await getAllEpisodes();
-    console.log('Debug - getAllEpisodes() result:', upcomingEpisodes.length, 'episodes');
-    
     [
       todayEpisodes,
       nextRecording,
